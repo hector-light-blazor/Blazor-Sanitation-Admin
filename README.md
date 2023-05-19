@@ -12,4 +12,4 @@ This is a small application to apply what I have learn to advancement for C#.
 
 # Screenshots of Application
 
-<img src="https://github.com/hector-light-blazor/Blazor-Sanitation-Admin/blob/main/Snapshots/software_snapshot.png?raw=true" width="200" height="200" />
+<img src="https://github.com/hector-light-blazor/Blazor-Sanitation-Admin/blob/main/Snapshots/software_snapshot.png?raw=true"  />
