@@ -1,0 +1,93 @@
+﻿
+@using System.Text.RegularExpressions
+@using System.ComponentModel.DataAnnotations
+@inject IAccountServices AccountServices
+
+<MudDialog>
+    <DialogContent>
+        @if (IsSaved && IsButtonSubmit)
+        {
+            <MudAlert Severity="Severity.Success" ContentAlignment="HorizontalAlignment.Right">Account Added!</MudAlert>
+        }
+        else if (IsSaved == false && IsButtonSubmit)
+        {
+            <MudAlert Severity="Severity.Error" ContentAlignment="HorizontalAlignment.Right">Account Couldn't be Added!</MudAlert>
+        }
+
+        <MudPaper Class="pa-4">
+            <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors">
+                <MudTextField @bind-Value="account.EmployeeId" T="int" Label="Employee Id"
+                              Validation="@(new Func<int, string>(ValidateEmployeeId))" AutoFocus="true" Required="true" RequiredError="Employee Id is required!" />
+                <MudTextField @bind-Value="account.Email" T="string" Label="Email" Required="true" RequiredError="Email is required!"
+                              Validation="@(new EmailAddressAttribute() {ErrorMessage = "The email address is invalid"})" />
+                <MudTextField @bind-Value="account.FirstName" T="string" Label="Fist Name" HelperText="Enter First Name" Required="true" RequiredError="First Name must be entered." />
+                <MudTextField @bind-Value="account.MiddleName" T="string" Label="Middle Name" HelperText="Enter Middle Name" />
+                <MudTextField @bind-Value="account.LastName" T="string" Label="Last Name" HelperText="Enter Last Name" Required="true" RequiredError="Last Name must be entered." />
+                <MudTextField @bind-Value="account.DigestPassword" T="string" Label="Password" HelperText="Choose a strong password" @ref="pwField1"
+                              InputType="InputType.Password"
+                              Validation="@(new Func<string, IEnumerable<string>>(PasswordStrength))" Required="true"
+                              RequiredError="Password is required!" />
+                <MudTextField @bind-Value="account.EncodeLookUp" T="string"
+                              Label="Password" HelperText="Repeat the password" Required="true" InputType="InputType.Password"
+                              Validation="@(new Func<string, string>(PasswordMatch))" />
+
+                <div class="d-flex align-center justify-space-between">
+                    <MudButton OnClick="AddUser" Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!success)" Class="ml-auto">Register</MudButton>
+                </div>
+            </MudForm>
+        </MudPaper>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Close</MudButton>
+
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    bool success;
+    bool IsSaved;
+    bool IsButtonSubmit;
+    string[] errors = { };
+    MudTextField<string> pwField1;
+    MudForm form;
+    Account account { get; set; } = new();
+
+
+    void Cancel() => MudDialog.Cancel();
+
+    private IEnumerable<string> PasswordStrength(string pw)
+    {
+        if (string.IsNullOrWhiteSpace(pw))
+        {
+            yield return "Password is required!";
+            yield break;
+        }
+        if (pw.Length < 8)
+            yield return "Password must be at least of length 8";
+    }
+
+    private string PasswordMatch(string arg)
+    {
+        if (pwField1.Value != arg)
+            return "Passwords don't match";
+        return null;
+    }
+
+    private string ValidateEmployeeId(int arg)
+    {
+        if (arg <= 0)
+        {
+            return "Employee needs to be entered";
+
+        }
+        return null;
+    }
+
+    private async Task AddUser()
+    {
+
+        IsSaved = await AccountServices.InsertAccount(account);
+        IsButtonSubmit = true;
+    }
+}

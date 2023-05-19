@@ -1,0 +1,26 @@
+﻿@inherits LayoutComponentBase
+
+<PageTitle>SanitationPortal</PageTitle>
+<MudThemeProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
+    <div class="page">
+        <main>
+
+            <div class="top-row justify-content-between px-4 auth">
+                <div id="title">
+                    Sanitation Admin
+                </div>
+                <div class="end-row">
+                    <LoginDisplay />
+                    <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+                </div>
+
+            </div>
+
+            <article class="px-4" style="background: #CEDDEE; height: 100vh; ">
+                @Body
+            </article>
+        </main>
+    </div>
+

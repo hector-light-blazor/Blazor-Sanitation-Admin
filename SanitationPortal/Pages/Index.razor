@@ -1,0 +1,133 @@
+﻿@page "/"
+@inject IAccountServices AccountServices
+@inject IDialogService Dialog
+@using System.Collections.ObjectModel
+
+<PageTitle>Sanitation Portal</PageTitle>
+
+<div class="d-flex justify-center align-center" style="height: 100%;">
+
+    <MudDataGrid T="Account" Hover="true" Items="@accounts"
+                 EditMode="DataGridEditMode.Form" ReadOnly="false"
+                 EditTrigger="DataGridEditTrigger.Manual"
+                 CommittedItemChanges="@CommittedItemChanges"
+                 SortMode="SortMode.Multiple" Filterable="true" QuickFilter="@_quickFilter"
+                 Bordered="true" Dense="true"
+                 Hideable="true">
+        <ToolBarContent>
+            <MudFab @onclick="OpenDialog" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" />
+            <MudSpacer />
+            <MudText Typo="Typo.h6">Sanitation Patrol - Accounts</MudText>
+            <MudSpacer />
+            <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true"
+                          AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
+        <Columns>
+            <PropertyColumn Property="x => x.Id" IsEditable="false" />
+            <PropertyColumn Property="x => x.EmployeeId" Title="Employee Id" />
+            <PropertyColumn Property="x => x.FirstName" />
+            <PropertyColumn Property="x => x.MiddleName" />
+            <PropertyColumn Property="x => x.LastName" />
+            <PropertyColumn Property="x => x.Email" />
+            <PropertyColumn Property="x => x.EncodeLookUp" Title="Password" />
+            <PropertyColumn Property="x => x.IsActive">
+                <EditTemplate>
+                    <MudSwitch  @bind-Checked="@context.Item.IsActive" Color="Color.Primary" />
+                </EditTemplate>
+             
+            </PropertyColumn>
+            <TemplateColumn CellClass="d-flex justify-end">
+                <CellTemplate>
+                    
+                    <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="@context.Actions.StartEditingItemAsync" />
+                </CellTemplate>
+            </TemplateColumn>
+
+        </Columns>
+        <PagerContent>
+            <MudDataGridPager T="Account" />
+        </PagerContent>
+    </MudDataGrid>
+
+</div>
+
+
+
+@code {
+
+    private bool _loading = true;
+    private bool IsSubmit = false;
+    private string? _searchString;
+    private ObservableCollection<Account> accounts { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _loading = true;
+        await FetchDataAsync();
+        _loading = false;
+    }
+
+    private async Task FetchDataAsync()
+    {
+        var downloadAccounts = await AccountServices.GetAccounts();
+
+        accounts = new ObservableCollection<Account>(downloadAccounts);
+        StateHasChanged();
+    }
+
+
+    private Func<Account, bool> _quickFilter => x =>
+    {
+        if (string.IsNullOrWhiteSpace(_searchString))
+            return true;
+
+        if (x.FirstName.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if (x.MiddleName.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if ($"{x.LastName} ".Contains(_searchString))
+            return true;
+
+        return false;
+    };
+
+
+    private async void OpenDialog()
+    {
+        var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
+
+        var dialog = Dialog.Show<AddAccountForm>("Add Account", options);
+
+        var result = await dialog.Result;
+
+        if (result.Canceled)
+        {
+            await FetchDataAsync();
+        }
+
+
+    }
+
+    void StartedEditingItem(Account item)
+    {
+        // _events.Insert(0, $"Event = StartedEditingItem, Data = {System.Text.Json.JsonSerializer.Serialize(item)}");
+    }
+
+    void CanceledEditingItem(Account item)
+    {
+        //_events.Insert(0, $"Event = CanceledEditingItem, Data = {System.Text.Json.JsonSerializer.Serialize(item)}");
+    }
+
+    async void CommittedItemChanges(Account item)
+    {
+        //Need to do this if SHA1 is already set could re crypto sha1 to another sha1
+        //need the plain text.
+        item.DigestPassword = item.EncodeLookUp;
+
+        var response = await AccountServices.UpdateAccount(item);
+
+        await FetchDataAsync();
+    }
+}

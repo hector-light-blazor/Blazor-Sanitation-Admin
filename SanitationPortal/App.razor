@@ -1,0 +1,49 @@
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager 
+
+<CascadingAuthenticationState>
+    <Router AppAssembly="@typeof(App).Assembly">
+        <Found Context="routeData">
+            <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+            <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+        </Found>
+        <NotFound>
+            <PageTitle>Not found</PageTitle>
+            <LayoutView Layout="@typeof(MainLayout)">
+                <p role="alert">Sorry, there's nothing at this address.</p>
+            </LayoutView>
+        </NotFound>
+    </Router>
+</CascadingAuthenticationState>
+
+
+@code{
+
+
+    protected override async Task OnInitializedAsync()
+    {
+    
+        if (!await IsUserAuthenticatedAsync())
+        {
+            RedirectToLogin();
+        }
+
+
+    }
+
+    private async Task<bool> IsUserAuthenticatedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        var identity = user.Identity;
+
+        return identity.IsAuthenticated;
+    }
+
+    private void RedirectToLogin()
+    {
+        NavigationManager.NavigateTo("/Identity/Account/Login");
+    }
+}
