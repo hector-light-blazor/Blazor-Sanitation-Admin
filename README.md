@@ -1,5 +1,17 @@
 # Blazor-Sanitation-Admin
-This is a small application to apply what I have learn to advancement for C#.
+This is a small application to apply what I have learned to advancement in C#.
+
+This application was built to help a buddy of mine manage some accounts for an internal application.
+
+I wanted to expand and keep growing with Blazor.
+
+# Tech Stack
+
+* C#
+* .Net 7
+* EF Core 7
+* PostgresSQL Version 15
+* Docker
 
 # C# Concepts and UI components
 
