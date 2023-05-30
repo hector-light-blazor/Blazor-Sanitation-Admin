@@ -25,11 +25,13 @@
                 <MudTextField @bind-Value="account.LastName" T="string" Label="Last Name" HelperText="Enter Last Name" Required="true" RequiredError="Last Name must be entered." />
                 <MudTextField @bind-Value="account.DigestPassword" T="string" Label="Password" HelperText="Choose a strong password" @ref="pwField1"
                               InputType="InputType.Password"
-                              Validation="@(new Func<string, IEnumerable<string>>(PasswordStrength))" Required="true"
+                              Required="true"
                               RequiredError="Password is required!" />
                 <MudTextField @bind-Value="account.EncodeLookUp" T="string"
                               Label="Password" HelperText="Repeat the password" Required="true" InputType="InputType.Password"
                               Validation="@(new Func<string, string>(PasswordMatch))" />
+
+                <MudSwitch @bind-Checked="@account.IsActive" Color="Color.Primary" Label="Is Active" />
 
                 <div class="d-flex align-center justify-space-between">
                     <MudButton OnClick="AddUser" Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!success)" Class="ml-auto">Register</MudButton>
@@ -56,17 +58,7 @@
 
     void Cancel() => MudDialog.Cancel();
 
-    private IEnumerable<string> PasswordStrength(string pw)
-    {
-        if (string.IsNullOrWhiteSpace(pw))
-        {
-            yield return "Password is required!";
-            yield break;
-        }
-        if (pw.Length < 8)
-            yield return "Password must be at least of length 8";
-    }
-
+  
     private string PasswordMatch(string arg)
     {
         if (pwField1.Value != arg)

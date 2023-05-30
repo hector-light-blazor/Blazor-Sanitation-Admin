@@ -50,7 +50,7 @@ namespace SanitationPortal.Models.Extensions
                 using var sha1 = SHA1.Create();
                 var hash = sha1.ComputeHash(Encoding.UTF8.GetBytes(plainText));
 
-                return Convert.ToHexString(hash);
+                return Convert.ToHexString(hash).ToLower();
             }
 
 			return string.Empty;
