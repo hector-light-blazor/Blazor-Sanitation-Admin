@@ -1,16 +1,47 @@
 ﻿using System;
-using SanitationPortal.Data.Entities;
 using System.Security.Cryptography;
 using System.Text;
+using SanitationPortal.Models.Requests;
+using DTOs = SanitationPortal.Models.DTOs;
+using Entity = SanitationPortal.Data.Entities;
 
 namespace SanitationPortal.Models.Extensions
 {
 	public static class AccountExtension
 	{
-		public static Account ToEntity(this DTOs.Account account)
+
+
+		public static Entity.Account ToEntity(this UserLoginRequest request) 
+		{
+			return new Entity.Account
+			{
+				EmployeeId = request.EmployeeId,
+				DigestPassword = HashValue(request.Password)
+			};
+		}
+
+		public static Entity.Account ToEntity(this UserRegisterRequest account) 
+		{
+            return new Entity.Account
+            {
+                Id = 0,
+                EmployeeId = account.EmployeeId,
+                FirstName = account.FirstName,
+                MiddleName = account.MiddleName,
+                EmailAddress = account.Email,
+                LastName = account.LastName,
+                DigestPassword = HashValue(account.Password ?? ""),
+                EncodeLookUp = Base64Encode(account.Password ?? ""),
+                IsActive = true
+
+            };
+
+        }
+
+		public static Entity.Account ToEntity(this DTOs.Account account)
 		{
 
-			return new Account
+			return new Entity.Account
 			{
 				Id = account.Id,
 				EmployeeId = account.EmployeeId,
@@ -26,7 +57,7 @@ namespace SanitationPortal.Models.Extensions
 
 		}
 
-		public static DTOs.Account ToModel(this Account account)
+		public static DTOs.Account ToModel(this Entity.Account account)
 		{
 			return new DTOs.Account
 			{

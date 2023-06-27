@@ -10,9 +10,10 @@
     <None Remove="Services\" />
     <None Remove="Services\Interfaces\" />
   </ItemGroup>
+
   <ItemGroup>
-    <Folder Include="Services\" />
-    <Folder Include="Services\Interfaces\" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.31.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.31.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SanitationPortal.Models\SanitationPortal.Models.csproj" />

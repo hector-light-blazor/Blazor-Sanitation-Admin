@@ -58,7 +58,7 @@
 
     void Cancel() => MudDialog.Cancel();
 
-  
+
     private string PasswordMatch(string arg)
     {
         if (pwField1.Value != arg)
@@ -79,7 +79,9 @@
     private async Task AddUser()
     {
 
-        IsSaved = await AccountServices.InsertAccount(account);
+        var response = await AccountServices.InsertAccount(account);
+
+        IsSaved = response.Success;
         IsButtonSubmit = true;
     }
 }

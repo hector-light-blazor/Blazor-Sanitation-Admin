@@ -48,7 +48,16 @@ namespace SanitationPortal.Data.Repositories
             return isSuccess;
 		}
 
-		public async Task<bool> UpdateAccount(Account account)
+        public async Task<Account> Login(int employeeId, string password)
+        {
+			using var context = await _factory.CreateDbContextAsync();
+			var account = await context.Accounts
+							.FirstOrDefaultAsync(account => 
+							account.EmployeeId == employeeId && account.DigestPassword.Equals(password));
+			return account ?? new Account();
+        }
+
+        public async Task<bool> UpdateAccount(Account account)
 		{
 			using var context = await _factory.CreateDbContextAsync();
 
@@ -68,6 +77,12 @@ namespace SanitationPortal.Data.Repositories
 			return false;
 		}
 
+        public async Task<bool> UserExists(int employeeId)
+        {
+            using var context = await _factory.CreateDbContextAsync();
+
+			return await context.Accounts.AnyAsync(account => account.Id == employeeId);
+        }
     }
 }
 

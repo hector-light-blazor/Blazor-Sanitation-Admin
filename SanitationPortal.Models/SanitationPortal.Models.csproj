@@ -13,10 +13,11 @@
     <None Remove="Extensions\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Requests\" />
-    <Folder Include="Response\" />
     <Folder Include="DTOs\" />
     <Folder Include="Extensions\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SanitationPortal.Data\SanitationPortal.Data.csproj" />

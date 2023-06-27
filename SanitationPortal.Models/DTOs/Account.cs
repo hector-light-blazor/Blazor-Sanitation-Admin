@@ -1,9 +1,13 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
+
 namespace SanitationPortal.Models.DTOs
 {
 	public class Account
 	{
 		public int Id { get; set; }
+
+		[Required]
 		public int EmployeeId { get; set; }
 		public string FirstName { get; set; } = string.Empty;
 		public string MiddleName { get; set; } = string.Empty;

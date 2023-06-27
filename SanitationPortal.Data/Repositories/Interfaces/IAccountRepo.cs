@@ -12,6 +12,10 @@ namespace SanitationPortal.Data.Repositories.Interfaces
 
 		public Task<bool> UpdateAccount(Account account);
 
+		public Task<bool> UserExists(int employeeId);
+
+		public Task<Account> Login(int employeeId, string password);
+
     }
 }
 

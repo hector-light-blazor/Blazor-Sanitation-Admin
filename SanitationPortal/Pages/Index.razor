@@ -69,10 +69,16 @@
 
     private async Task FetchDataAsync()
     {
-        var downloadAccounts = await AccountServices.GetAccounts();
+        var responseAccounts = await AccountServices.GetAccounts();
 
-        accounts = new ObservableCollection<Account>(downloadAccounts);
-        StateHasChanged();
+        if (responseAccounts.Success)
+        {
+            accounts = new ObservableCollection<Account>(responseAccounts.Data);
+            StateHasChanged();
+        
+        }
+
+
     }
 
 
