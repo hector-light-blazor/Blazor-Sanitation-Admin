@@ -80,8 +80,8 @@ namespace SanitationPortal.Data.Repositories
         public async Task<bool> UserExists(int employeeId)
         {
             using var context = await _factory.CreateDbContextAsync();
-
-			return await context.Accounts.AnyAsync(account => account.Id == employeeId);
+			var result = await context.Accounts.AnyAsync(account => account.EmployeeId == employeeId);
+			return result;
         }
     }
 }

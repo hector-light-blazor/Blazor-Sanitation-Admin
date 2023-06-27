@@ -17,6 +17,8 @@ namespace SanitationPortal.Models.Response
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Token { get; set; }
 
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public List<Error> Errors { get; set; } 
     }
 

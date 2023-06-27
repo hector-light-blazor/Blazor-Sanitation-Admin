@@ -4,6 +4,7 @@ using SanitationPortal.Data.Repositories;
 using SanitationPortal.Data.Repositories.Interfaces;
 using SanitationPortal.Service.Services;
 using SanitationPortal.Service.Services.Interfaces;
+using SanitationPortal.Data.Extension;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +25,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+//Apply Migrations for Identity and Sanitation Porta
+app.ApplyMigrations<SanitationDbContext>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

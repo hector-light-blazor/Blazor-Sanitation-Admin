@@ -84,6 +84,8 @@ namespace SanitationPortal.Service.Services
                 return response;
             }
 
+			response.Errors = new List<Error>() { new Error { ErrorCode = 500, Message = "Employee Id exists" } };
+
 			return	response;
         }
 
