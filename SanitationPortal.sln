@@ -11,7 +11,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SanitationPortal.Data", "Sa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SanitationPortal.Service", "SanitationPortal.Service\SanitationPortal.Service.csproj", "{C9317EAE-B4A9-4F59-BB84-4323E658BF90}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sanitation.API", "Sanitation.API\Sanitation.API.csproj", "{9339F9A2-6EED-4F25-AAA2-C9E7AB1DCD5E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sanitation.API", "Sanitation.API\Sanitation.API.csproj", "{9339F9A2-6EED-4F25-AAA2-C9E7AB1DCD5E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sanitation.API.Client", "Sanitation.API.Client\Sanitation.API.Client.csproj", "{884BB740-C0C4-4C40-A3B8-1B83FC313E30}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "App", "App", "{9E5D9F80-ED22-4EF4-A7F7-4970A1BA9229}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SanitationApp", "SanitationApp\SanitationApp.csproj", "{5A741F27-0865-489B-A848-554BB24E0E0D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,9 +45,22 @@ Global
 		{9339F9A2-6EED-4F25-AAA2-C9E7AB1DCD5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9339F9A2-6EED-4F25-AAA2-C9E7AB1DCD5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9339F9A2-6EED-4F25-AAA2-C9E7AB1DCD5E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{884BB740-C0C4-4C40-A3B8-1B83FC313E30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{884BB740-C0C4-4C40-A3B8-1B83FC313E30}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{884BB740-C0C4-4C40-A3B8-1B83FC313E30}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{884BB740-C0C4-4C40-A3B8-1B83FC313E30}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A741F27-0865-489B-A848-554BB24E0E0D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A741F27-0865-489B-A848-554BB24E0E0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A741F27-0865-489B-A848-554BB24E0E0D}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{5A741F27-0865-489B-A848-554BB24E0E0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A741F27-0865-489B-A848-554BB24E0E0D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A741F27-0865-489B-A848-554BB24E0E0D}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5A741F27-0865-489B-A848-554BB24E0E0D} = {9E5D9F80-ED22-4EF4-A7F7-4970A1BA9229}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {82B192F2-64CF-4CE8-8FB3-7D227674DBB0}
