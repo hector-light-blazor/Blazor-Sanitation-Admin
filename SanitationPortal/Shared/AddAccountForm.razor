@@ -11,11 +11,20 @@
         }
         else if (IsSaved == false && IsButtonSubmit)
         {
-            <MudAlert Severity="Severity.Error" ContentAlignment="HorizontalAlignment.Right">Account Couldn't be Added!</MudAlert>
+            <MudAlert Severity="Severity.Error" ContentAlignment="HorizontalAlignment.Right">Account Couldn't be Added!
+                <ul>
+
+                    @foreach(var error in Errors)
+                    {
+                        <li>@error.Message</li>
+                    
+                    }
+                </ul>
+            </MudAlert>
         }
 
         <MudPaper Class="pa-4">
-            <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors">
+            <MudForm @ref="form" @bind-IsValid="@success" >
                 <MudTextField @bind-Value="account.EmployeeId" T="int" Label="Employee Id"
                               Validation="@(new Func<int, string>(ValidateEmployeeId))" AutoFocus="true" Required="true" RequiredError="Employee Id is required!" />
                 <MudTextField @bind-Value="account.Email" T="string" Label="Email" Required="true" RequiredError="Email is required!"
@@ -50,7 +59,7 @@
     bool success;
     bool IsSaved;
     bool IsButtonSubmit;
-    string[] errors = { };
+    List<Error> Errors = new List<Error>();
     MudTextField<string> pwField1;
     MudForm form;
     Account account { get; set; } = new();
@@ -82,6 +91,9 @@
         var response = await AccountServices.InsertAccount(account);
 
         IsSaved = response.Success;
+
+        Errors = response.Errors;
+
         IsButtonSubmit = true;
     }
 }

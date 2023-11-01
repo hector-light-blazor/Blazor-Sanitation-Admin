@@ -14,6 +14,8 @@ namespace SanitationPortal.Data.Repositories.Interfaces
 
 		public Task<bool> UserExists(int employeeId);
 
+		public Task<bool> EmailExists(string email);
+
 		public Task<Account> Login(int employeeId, string password);
 
     }

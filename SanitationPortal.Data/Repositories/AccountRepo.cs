@@ -6,7 +6,7 @@ using SanitationPortal.Data.Repositories.Interfaces;
 
 namespace SanitationPortal.Data.Repositories
 {
-	public class AccountRepo : IAccountRepo
+    public class AccountRepo : IAccountRepo
 	{
 		private readonly IDbContextFactory<SanitationDbContext> _factory;
 
@@ -16,7 +16,7 @@ namespace SanitationPortal.Data.Repositories
 		}
 
 
-		public async Task<Account> GetAccount(int Id)
+        public async Task<Account> GetAccount(int Id)
 		{
 			using var context = await _factory.CreateDbContextAsync();
 
@@ -80,8 +80,14 @@ namespace SanitationPortal.Data.Repositories
         public async Task<bool> UserExists(int employeeId)
         {
             using var context = await _factory.CreateDbContextAsync();
-			var result = await context.Accounts.AnyAsync(account => account.EmployeeId == employeeId);
-			return result;
+
+			return await context.Accounts.AnyAsync(account => account.EmployeeId == employeeId);
+        }
+        public async Task<bool> EmailExists(string email)
+        {
+            using var context = await _factory.CreateDbContextAsync();
+
+            return await context.Accounts.AnyAsync(account => account.EmailAddress == email);
         }
     }
 }

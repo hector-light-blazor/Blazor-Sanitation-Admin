@@ -9,6 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using SanitationPortal.Models.Requests;
 using Microsoft.Extensions.Configuration;
+using System.Runtime.InteropServices;
 
 namespace SanitationPortal.Service.Services
 {
@@ -25,7 +26,6 @@ namespace SanitationPortal.Service.Services
 		public async Task<Response<List<Account>>> GetAccounts()
 		{
 			var response = new Response<List<Account>>();
-			response.Success = true;
 
 			var accountEntity = await _accountRepo.GetAccounts();
 			response.Success = accountEntity.Any();
@@ -40,32 +40,40 @@ namespace SanitationPortal.Service.Services
 		public async Task<Response<bool>> InsertAccount(Account account)
 		{
 			var response = new Response<bool>();
-			response.Success = false;
 
-			var userExists = UserExists(account.EmployeeId).GetAwaiter().GetResult();
-			if(userExists.Success is false) 
-			{			
-				var entity = account.ToEntity();
-
-				response.Success = await _accountRepo.InsertAccount(entity);
+			if (await _accountRepo.UserExists(account.EmployeeId)) 
+			{
+                response.Errors = new List<Error>() { new Error { ErrorCode = 404, Message = "Employee Id Exists" } };
 				return response;
-			}
+            }
 
-			response.Errors = new List<Error>() { new Error { ErrorCode = 500, Message = "User Exists" } };
+			if (await _accountRepo.EmailExists(account.Email))
+			{
+                response.Errors = new List<Error>() { new Error { ErrorCode = 404, Message = "Email Address Exists" } };
+                return response;
+            }
+			
+			var entity = account.ToEntity();
 
+			response.Success = await _accountRepo.InsertAccount(entity);
+		
 			return response;
+		
 		}
 
         public async Task<Response<string>> Login(UserLoginRequest request)
         {
 			var response = new Response<string>();
-			response.Success = false;
+
 			var entity = request.ToEntity();
+
 			var account = await _accountRepo.Login(entity.EmployeeId, entity.DigestPassword);
+
 			response.Success = account.Id != 0;
+
 			response.Data = (response.Success) ? "Valid Account!" : "Not Valid Account";
 
-			response.Token = (response.Success) ? CreateToken(account.ToModel()) : null;
+			response.Token = (response.Success) ? CreateToken(account.ToModel()) : string.Empty;
 
 			return response;
         }
@@ -73,54 +81,34 @@ namespace SanitationPortal.Service.Services
         public async Task<Response<bool>> RegisterAccount(UserRegisterRequest request)
         {
             var response = new Response<bool>();
-            response.Success = false;
 
-            var userExists = UserExists(request.EmployeeId).GetAwaiter().GetResult();
-            if (userExists.Success is false)
-            {
-                var entity = request.ToEntity();
 
-                response.Success = await _accountRepo.InsertAccount(entity);
+			if (await _accountRepo.UserExists(request.EmployeeId)) 
+			{
+                response.Errors = new List<Error>() { new Error { ErrorCode = 404, Message = "Employee Id exists" } };
+
                 return response;
             }
+            
+            var entity = request.ToEntity();
 
-			response.Errors = new List<Error>() { new Error { ErrorCode = 500, Message = "Employee Id exists" } };
-
+            response.Success = await _accountRepo.InsertAccount(entity);
+            
 			return	response;
         }
 
         public async Task<Response<bool>> UpdateAccount(Account account)
 		{
 			var response = new Response<bool>();
-			response.Success = false;
-
+		
 
 
 			var entity = account.ToEntity();
+			
 			response.Success = await _accountRepo.UpdateAccount(entity);
 
 			return response;
 		}
-
-        public  async Task<Response<bool>> UserExists(int employeeId)
-        {
-            var response = new Response<bool>();
-			response.Success = false;
-
-			try
-			{
-				response.Success = await _accountRepo.UserExists(employeeId);
-			}
-			catch (Exception ex)
-			{
-				response.Errors = new List<Error> {new Error{
-						ErrorCode = ex.GetHashCode(),
-						Message = ex.Message,
-				}};
-			}
-
-			return response;
-        }
 
 		private string CreateToken(Account account) 
 		{

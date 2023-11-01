@@ -13,8 +13,6 @@ namespace SanitationPortal.Service.Services.Interfaces
 
 		public Task<Response<bool>> UpdateAccount(Account account);
 
-		public Task<Response<bool>> UserExists(int employeeId);
-
 		public Task<Response<bool>> RegisterAccount(UserRegisterRequest request);
 
         public Task<Response<string>> Login(UserLoginRequest request);
