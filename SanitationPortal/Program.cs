@@ -52,6 +52,15 @@ var app = builder.Build();
 app.ApplyMigrations<ApplicationDbContext>()
    .ApplyMigrations<SanitationDbContext>();
 
+
+// Seed the default user
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+    ApplicationDbContext.SeedDefaultUser(userManager);
+}
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
