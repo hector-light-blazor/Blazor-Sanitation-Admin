@@ -13,9 +13,18 @@ using SanitationPortal.Service.Services.Interfaces;
 using SanitationPortal.Service.Services;
 using SanitationPortal.Data.Repositories.Interfaces;
 using SanitationPortal.Data.Repositories;
+using Microsoft.AspNetCore.Rewrite;
+using SanitationPortal.Models.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
+//Get Base Path if configure..
+
+//The base path if using virtual application under existing application.
+var appBase = new App();
+builder.Configuration.GetSection("app").Bind(appBase);
+
+builder.Services.AddSingleton(appBase);
 
 
 // Add services to the container.
@@ -61,6 +70,10 @@ using (var scope = app.Services.CreateScope())
     ApplicationDbContext.SeedDefaultUser(userManager);
 }
 
+var options = new RewriteOptions()
+     .AddRewrite(@"/Account/(.*)", "Identity/Account/$1", skipRemainingRules: true);
+app.UseRewriter(options);
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -68,6 +81,8 @@ if (app.Environment.IsDevelopment())
 }
 else
 {
+  
+
     app.UseExceptionHandler("/Error");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();

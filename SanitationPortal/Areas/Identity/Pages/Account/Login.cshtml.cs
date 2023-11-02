@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using SanitationPortal.Models.Configuration;
 
 namespace SanitationPortal.Areas.Identity.Pages.Account
 {
@@ -21,12 +22,14 @@ namespace SanitationPortal.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
+        private readonly Models.Configuration.App _appBasePath;
 
-        public LoginModel(SignInManager<IdentityUser> signInManager, ILogger<LoginModel> logger)
+        public LoginModel(SignInManager<IdentityUser> signInManager, ILogger<LoginModel> logger, Models.Configuration.App appBasePath)
         {
             _signInManager = signInManager;
             _logger = logger;
-        }
+            _appBasePath = appBasePath;
+    }
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -91,7 +94,17 @@ namespace SanitationPortal.Areas.Identity.Pages.Account
                 ModelState.AddModelError(string.Empty, ErrorMessage);
             }
 
-            returnUrl ??= Url.Content("~/");
+
+
+            if (_appBasePath != null || !string.IsNullOrEmpty(_appBasePath.BasePath))
+            {
+                returnUrl = Url.Content($"~/{_appBasePath.BasePath}");
+            }
+            else 
+            {
+                returnUrl ??= Url.Content("~/");
+            }
+            
 
             // Clear the existing external cookie to ensure a clean login process
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
